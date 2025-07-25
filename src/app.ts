@@ -50,6 +50,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // 从初始状态里面获取数据
     const { isMicroApp } = initialState || {};
 
+    // 设置 主题
+    document.documentElement.setAttribute('data-theme', 'light');
+
     return {
         /**
          * @description: 做为 子应用时 放弃基础 pro-layout
