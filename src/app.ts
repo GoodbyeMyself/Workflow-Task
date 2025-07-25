@@ -4,7 +4,7 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 // 微前端
 import { apps } from '../config/qiankun';
 
-// 导入增强版错误过滤器
+// 导入错误过滤器
 import { enableErrorFilter } from './utils/enhancedErrorFilter';
 
 // 启用错误过滤器
@@ -19,7 +19,9 @@ export const qiankun = {
     apps,
     // 应用 加载 之前
     async bootstrap(props: AppProps) {
-        console.log(props, '微应用： 加载前');
+        if (props) {
+            console.log(props, '微应用： 加载前');
+        }
     },
     // 应用 render 之前触发
     async mount(props: AppProps) {

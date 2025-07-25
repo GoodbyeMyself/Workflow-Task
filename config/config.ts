@@ -70,7 +70,7 @@ export default defineConfig({
     /**
      * @name favicon 配置
      */
-    favicons: ['/favicon.svg'],
+    favicons: ['favicon.svg'],
     /**
      * @name 代理配置
      * @description 可以让你的本地服务器代理到你的服务器上，这样你就可以访问服务器的数据了
@@ -80,9 +80,9 @@ export default defineConfig({
      */
     proxy: proxy[REACT_APP_ENV as keyof typeof proxy],
     // 要在非根目录下部署 umi 项目时，你可以使用 base 配置
-    base: '/microapp-auditcenter/',
+    base: '/',
     // 静态资源公共路径
-    publicPath: '/microapp-auditcenter/',
+    publicPath: '/',
     // 输出的文件夹 名称
-    outputPath: 'microapp-auditcenter',
+    outputPath: '',
 });
