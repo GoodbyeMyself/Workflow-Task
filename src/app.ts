@@ -66,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         layout: 'top',
         // 自定义 页面 title
         pageTitleRender: () => {
-            return isMicroApp ? '工作流' : '微应用';
+            return 'Dify 任务编排';
         },
     };
 };

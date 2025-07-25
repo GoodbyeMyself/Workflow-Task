@@ -1,16 +1,16 @@
-import { defineConfig } from '@umijs/max';
+import { defineConfig } from "@umijs/max";
 // 代理设置
-import proxy from './proxy';
+import proxy from "./proxy";
 // 路由
-import routes from './routes';
+import routes from "./routes";
 
-const { REACT_APP_ENV = 'dev' } = process.env;
+const { REACT_APP_ENV = "dev" } = process.env;
 
 // 构建环境 标识
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 // 开启 Gzip
-const CompressionPlugin = require('compression-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
 // Gzip 匹配规则
 const productionGzipExtensions =
     /\.(js|css|json|txt|html|ico|svg|ttf|woff|woff2|eot|png|jpg|jpeg)(\?.*)?$/i;
@@ -25,15 +25,15 @@ export default defineConfig({
         // 执行 构建时
         if (isProduction) {
             // 开启 gzip 压缩
-            memo.plugin('compression-webpack-plugin').use(
+            memo.plugin("compression-webpack-plugin").use(
                 new CompressionPlugin({
-                    algorithm: 'gzip',
+                    algorithm: "gzip",
                     // 匹配 文件规则
                     test: productionGzipExtensions,
                     // 压缩比
                     threshold: 10240,
                     minRatio: 0.8,
-                }),
+                })
             );
         }
     },
@@ -43,7 +43,7 @@ export default defineConfig({
     initialState: {},
     request: {},
     layout: {
-        title: '工作流',
+        title: "工作流",
     },
     /**
      * @name 路由的配置，不在路由中引入的文件不会编译
@@ -53,14 +53,14 @@ export default defineConfig({
     // umi routes: https://umijs.org/docs/routing
     routes,
     // --
-    npmClient: 'npm',
+    npmClient: "npm",
     // 微应用
     qiankun: {
         master: {
             // 自定义 加载动画
-            defaultLoader: '@/components/DefaultLoader',
+            defaultLoader: "@/components/DefaultLoader",
             // 自定义 错误捕获
-            defaultErrorBoundary: '@/components/DefaultErrorBoundary',
+            defaultErrorBoundary: "@/components/DefaultErrorBoundary",
         },
         // 开启 作为子应用
         slave: {},
@@ -70,7 +70,7 @@ export default defineConfig({
     /**
      * @name favicon 配置
      */
-    favicons: ['favicon.svg'],
+    favicons: ["favicon.svg"],
     /**
      * @name 代理配置
      * @description 可以让你的本地服务器代理到你的服务器上，这样你就可以访问服务器的数据了
@@ -80,9 +80,10 @@ export default defineConfig({
      */
     proxy: proxy[REACT_APP_ENV as keyof typeof proxy],
     // 要在非根目录下部署 umi 项目时，你可以使用 base 配置
-    base: '/',
+    base: "/",
     // 静态资源公共路径
-    publicPath: '/',
+    publicPath: "/",
     // 输出的文件夹 名称
-    outputPath: '',
+    outputPath: "",
+    tailwindcss: {},
 });
