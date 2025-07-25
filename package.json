@@ -1,0 +1,30 @@
+{
+    "name": "workflow-task",
+    "private": true,
+    "author": "马云龙 <15500409521@163.com>",
+    "scripts": {
+        "build": "max build && node ./build/version.js",
+        "build:mac": "npm run build && tar -zcf ${npm_package_name}.tar.gz ${npm_package_name} && rm -rf ${npm_package_name}",
+        "dev": "max dev",
+        "format": "prettier --cache --write .",
+        "postinstall": "max setup",
+        "setup": "max setup",
+        "start": "npm run dev"
+    },
+    "dependencies": {
+        "@ant-design/icons": "^5.2.6",
+        "@ant-design/pro-components": "^2.6.49",
+        "@umijs/max": "^4.1.6",
+        "antd": "^5.12.8"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.45",
+        "@types/react-dom": "^18.2.18",
+        "compression-webpack-plugin": "^11.1.0",
+        "lint-staged": "^15.2.0",
+        "prettier": "^3.1.1",
+        "prettier-plugin-organize-imports": "^3.2.4",
+        "prettier-plugin-packagejson": "^2.4.7",
+        "typescript": "^5.3.3"
+    }
+}
