@@ -30,7 +30,7 @@ const CreateAppCard = forwardRef<HTMLDivElement, CreateAppCardProps>((props, ref
                 </button>
                 <button type="button" className='flex w-full cursor-pointer items-center rounded-lg px-6 py-[7px] text-[13px] font-medium leading-[18px] text-text-tertiary hover:bg-state-base-hover hover:text-text-secondary'>
                     <FilePlus02 className='mr-2 h-4 w-4 shrink-0' />
-                    从应用模板创建
+                    从应用模版创建
                 </button>
                 <button
                     type="button"

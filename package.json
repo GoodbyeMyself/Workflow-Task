@@ -18,7 +18,16 @@
     "@umijs/max": "^4.1.6",
     "antd": "^5.12.8",
     "classnames": "^2.5.1",
-    "tailwind-merge": "^2.5.4"
+    "tailwind-merge": "^2.5.4",
+    "@remixicon/react": "^4.5.0",
+    "ahooks": "^3.8.4",
+    "@floating-ui/react": "^0.26.25",
+    "lodash-es": "^4.17.21",
+    "reactflow": "^11.11.3",
+    "use-context-selector": "^2.0.0",
+    "react-i18next": "^15.1.0",
+    "class-variance-authority": "^0.7.0",
+    "ky": "^1.7.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",
@@ -29,6 +38,7 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "prettier-plugin-packagejson": "^2.4.7",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@types/lodash-es": "^4.17.12"
   }
 }

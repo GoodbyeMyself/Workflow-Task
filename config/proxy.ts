@@ -14,9 +14,8 @@ export default {
     // 如果需要自定义本地开发服务器  请取消注释按需调整
     dev: {
         // 数据质量
-        '/service-quality/': {
-            // target: 'http://localhost:5001/',
-            target: 'https://m1.apifoxmock.com/m1/4279578-3921636-default/',
+        '/console/api': {
+            target: 'http://localhost:5001/',
             changeOrigin: true,
             pathRewrite: {
                 '^': '',
