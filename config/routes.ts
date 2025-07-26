@@ -23,13 +23,15 @@ export default [
         layout: false
     },
     {
-        name: '首页',
+        name: '工作室',
         path: '/apps',
         component: './Apps',
+        icon: 'DiscordOutlined'
     },
     {
         name: 'Dify Canvas',
         path: '/difyCanvas',
         component: './DifyCanvas',
+        icon: 'PartitionOutlined'
     }
 ];
