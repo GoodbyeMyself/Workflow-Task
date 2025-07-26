@@ -24,5 +24,12 @@ export default [
         name: 'Dify Canvas',
         path: '/difyCanvas',
         component: './DifyCanvas',
+    },
+    {
+        name: '登录',
+        path: '/signin',
+        component: './signIn',
+        // 隐藏头部导航
+        layout: false
     }
 ];

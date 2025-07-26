@@ -49,21 +49,22 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-    // 从初始状态里面获取数据
-    const { isMicroApp } = initialState || {};
+    // --
+    console.log(initialState, '<- 打印 initialState');
 
     // 设置 主题
     document.documentElement.setAttribute('data-theme', 'light');
 
+    // 设置 国际化
     setLocaleOnClient('zh-Hans', false);
 
     return {
         /**
-         * @description: 做为 子应用时 放弃基础 pro-layout
+         * @description: 是否放弃基础 pro-layout
          * @author: M.yunlong
          * @date: 2024-04-05 00:20:17
          */
-        pure: isMicroApp,
+        pure: false,
         // --
         logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
         menu: {
