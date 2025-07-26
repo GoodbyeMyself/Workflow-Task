@@ -70,7 +70,7 @@ export default defineConfig({
     /**
      * @name favicon 配置
      */
-    favicons: ["favicon.svg"],
+    favicons: ["favicon.ico"],
     /**
      * @name 代理配置
      * @description 可以让你的本地服务器代理到你的服务器上，这样你就可以访问服务器的数据了

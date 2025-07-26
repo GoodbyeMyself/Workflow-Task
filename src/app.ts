@@ -56,9 +56,6 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-    // --
-    console.log(initialState, '<- 打印 initialState');
-
     return {
         /**
          * @description: 是否放弃基础 pro-layout
