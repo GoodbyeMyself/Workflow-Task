@@ -13,17 +13,7 @@
 export default [
     {
         path: '/',
-        redirect: '/home',
-    },
-    {
-        name: '首页',
-        path: '/home',
-        component: './Home',
-    },
-    {
-        name: 'Dify Canvas',
-        path: '/difyCanvas',
-        component: './DifyCanvas',
+        redirect: '/apps',
     },
     {
         name: '登录',
@@ -31,5 +21,15 @@ export default [
         component: './signIn',
         // 隐藏头部导航
         layout: false
+    },
+    {
+        name: '首页',
+        path: '/apps',
+        component: './Apps',
+    },
+    {
+        name: 'Dify Canvas',
+        path: '/difyCanvas',
+        component: './DifyCanvas',
     }
 ];
