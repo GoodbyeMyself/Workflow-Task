@@ -4,18 +4,30 @@ import { Outlet } from 'umi';
 // 组件
 import Nav from './Nav';
 
+// 初始主题
+import { ThemeProvider } from 'next-themes';
+
 const Layout: React.FC = () => {
+
+
     return (
-        <div
-            style={{
-                minHeight: '600px',
-            }}
+        <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="light"
+            enableSystem={true}
+            disableTransitionOnChange={false}
         >
-            {/* 菜单 */}
-            {(window as any).__POWERED_BY_QIANKUN__ && <Nav />}
-            {/* 容器 */}
-            <Outlet />
-        </div>
+            <div
+                style={{
+                    minHeight: '600px',
+                }}
+            >
+                {/* 菜单 */}
+                {(window as any).__POWERED_BY_QIANKUN__ && <Nav />}
+                {/* 容器 */}
+                <Outlet />
+            </div>
+        </ThemeProvider>
     );
 };
 

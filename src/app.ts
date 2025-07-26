@@ -7,10 +7,17 @@ import { apps } from '../config/qiankun';
 // 导入错误过滤器
 import { enableErrorFilter } from './utils/enhancedErrorFilter';
 
-import { setLocaleOnClient } from '@/i18n'
+// 国际化
+import { setLocaleOnClient } from '@/i18n';
 
 // 启用错误过滤器
 enableErrorFilter();
+
+// 设置 主题
+document.documentElement.setAttribute('data-theme', 'light');
+
+// 设置 国际化
+setLocaleOnClient('zh-Hans', false);
 
 interface AppProps {
     name?: string;
@@ -51,12 +58,6 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // --
     console.log(initialState, '<- 打印 initialState');
-
-    // 设置 主题
-    document.documentElement.setAttribute('data-theme', 'light');
-
-    // 设置 国际化
-    setLocaleOnClient('zh-Hans', false);
 
     return {
         /**

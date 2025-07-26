@@ -14,7 +14,7 @@ export default {
     // 如果需要自定义本地开发服务器  请取消注释按需调整
     dev: {
         // 数据质量
-        '/console/api': {
+        'console/api': {
             target: 'http://localhost:5001/',
             changeOrigin: true,
             pathRewrite: {
