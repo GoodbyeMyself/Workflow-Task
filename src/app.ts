@@ -7,6 +7,8 @@ import { apps } from '../config/qiankun';
 // 导入错误过滤器
 import { enableErrorFilter } from './utils/enhancedErrorFilter';
 
+import { setLocaleOnClient } from '@/i18n'
+
 // 启用错误过滤器
 enableErrorFilter();
 
@@ -52,6 +54,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
     // 设置 主题
     document.documentElement.setAttribute('data-theme', 'light');
+
+    setLocaleOnClient('zh-Hans', false);
 
     return {
         /**
