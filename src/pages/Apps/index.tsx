@@ -9,7 +9,11 @@ import NewAppCard from './components/NewAppCard';
 // 业务 hook
 import { useDebounceFn } from 'ahooks'
 import { useTabSearchParams } from '@/hooks/use-tab-searchparams';
-import useAppsQueryState from '@/hooks/useAppsQueryState'
+import useAppsQueryState from '@/hooks/useAppsQueryState';
+// 请求
+import useSWRInfinite from 'swr/infinite';
+// 接口
+import { fetchAppList } from '@/service/apps';
 // Icon
 import {
     RiApps2Line,
@@ -17,7 +21,33 @@ import {
     RiFile4Line,
     RiMessage3Line,
     RiRobot3Line,
-} from '@remixicon/react'
+} from '@remixicon/react';
+// 类型
+import type { AppListResponse } from '@/models/app'
+
+const getKey = (
+    pageIndex: number,
+    previousPageData: AppListResponse,
+    activeTab: string,
+    isCreatedByMe: boolean,
+    tags: string[],
+    keywords: string,
+) => {
+    if (!pageIndex || previousPageData.has_more) {
+        const params: any = { url: 'apps', params: { page: pageIndex + 1, limit: 30, name: keywords, is_created_by_me: isCreatedByMe } }
+
+        if (activeTab !== 'all')
+            params.params.mode = activeTab
+        else
+            delete params.params.mode
+
+        if (tags.length)
+            params.params.tag_ids = tags
+
+        return params
+    }
+    return null
+}
 
 const HomePage: React.FC = () => {
 
@@ -75,6 +105,19 @@ const HomePage: React.FC = () => {
         setKeywords(value)
         handleSearch()
     }
+
+    const { data, isLoading, error, setSize, mutate } = useSWRInfinite(
+        (pageIndex: number, previousPageData: AppListResponse) => getKey(pageIndex, previousPageData, activeTab, isCreatedByMe, tagIDs, searchKeywords),
+        fetchAppList,
+        {
+            revalidateFirstPage: true,
+            shouldRetryOnError: false,
+            dedupingInterval: 500,
+            errorRetryCount: 3,
+        },
+    )
+
+    console.log(data, '<--');
 
     return (
         <div className='relative flex h-full shrink-0 grow flex-col overflow-y-auto bg-background-body'>
