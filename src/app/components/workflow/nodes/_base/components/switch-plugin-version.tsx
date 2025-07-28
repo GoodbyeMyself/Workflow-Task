@@ -13,7 +13,7 @@ import PluginMutationModel from '@/app/components/plugins/plugin-mutation-model'
 import useGetIcon from '@/app/components/plugins/install-plugin/base/use-get-icon'
 import { pluginManifestToCardPluginProps } from '@/app/components/plugins/install-plugin/utils'
 import { Badge as Badge2, BadgeState } from '@/app/components/base/badge/index'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { useTranslation } from 'react-i18next'
 import { marketplaceUrlPrefix } from '@/config'
 
@@ -82,7 +82,7 @@ export const SwitchPluginVersion: FC<SwitchPluginVersionProps> = (props) => {
         modalBottomLeft={
           <Link
             className='flex items-center justify-center gap-1'
-            href={`${marketplaceUrlPrefix}/plugins/${pluginDetail.declaration.author}/${pluginDetail.declaration.name}`}
+            to={`${marketplaceUrlPrefix}/plugins/${pluginDetail.declaration.author}/${pluginDetail.declaration.name}`}
             target='_blank'
           >
             <span className='system-xs-regular text-xs text-text-accent'>

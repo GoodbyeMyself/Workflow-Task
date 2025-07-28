@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import type { FC } from 'react'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { useTranslation } from 'react-i18next'
 import Tooltip from './tooltip'
 import ProgressTooltip from './progress-tooltip'
@@ -76,7 +76,7 @@ const Popup: FC<PopupProps> = ({
                         {
                           showHitInfo && (
                             <Link
-                              href={`/datasets/${source.dataset_id}/documents/${source.document_id}`}
+                              to={`/datasets/${source.dataset_id}/documents/${source.document_id}`}
                               className='hidden h-[18px] items-center text-xs text-text-accent group-hover:flex'>
                               {t('common.chat.citation.linkToDataset')}
                               <ArrowUpRight className='ml-1 h-3 w-3' />

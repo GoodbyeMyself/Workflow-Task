@@ -6,6 +6,7 @@ import {
 } from '@remixicon/react'
 import { useDebounceFn } from 'ahooks'
 import { useContext } from 'use-context-selector'
+import { useTranslation } from 'react-i18next'
 import { useStore as useTagStore } from './store'
 import Confirm from '@/app/components/base/confirm'
 import cn from '@/utils/classnames'
@@ -22,6 +23,7 @@ type TagItemEditorProps = {
 const TagItemEditor: FC<TagItemEditorProps> = ({
   tag,
 }) => {
+  const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
   const tagList = useTagStore(s => s.tagList)
   const setTagList = useTagStore(s => s.setTagList)
@@ -54,11 +56,11 @@ const TagItemEditor: FC<TagItemEditorProps> = ({
       ])
       setIsEditing(false)
       await updateTag(tagID, name)
-      notify({ type: 'success', message: '修改成功' })
+      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       setName(name)
     }
     catch {
-      notify({ type: 'error', message: '修改失败' })
+      notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
       setName(tag.name)
       const recoverList = tagList.map((tag) => {
         if (tag.id === tagID) {

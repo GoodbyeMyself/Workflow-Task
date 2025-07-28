@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
-    useRouter,
-} from 'next/navigation'
+    useNavigate,
+} from 'umi'
 import useSWRInfinite from 'swr/infinite'
 import { useTranslation } from 'react-i18next'
 import { useDebounceFn } from 'ahooks'
@@ -29,6 +29,25 @@ import { useStore as useTagStore } from '@/app/components/base/tag-management/st
 import TagManagementModal from '@/app/components/base/tag-management'
 import TagFilter from '@/app/components/base/tag-management/filter'
 import CheckboxWithLabel from '@/app/components/datasets/create/website/base/checkbox-with-label'
+
+
+function NoAppsFound() {
+    const { t } = useTranslation()
+    function renderDefaultCard() {
+        const defaultCards = Array.from({ length: 36 }, (_, index) => (
+            <div key={index} className='inline-flex h-[160px] rounded-xl bg-background-default-lighter'></div>
+        ))
+        return defaultCards
+    }
+    return (
+        <>
+            {renderDefaultCard()}
+            <div className='absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-gradient-to-t from-background-body to-transparent'>
+                <span className='system-md-medium text-text-tertiary'>{t('app.newApp.noAppsFound')}</span>
+            </div>
+        </>
+    )
+}
 
 const getKey = (
     pageIndex: number,
@@ -56,7 +75,7 @@ const getKey = (
 
 const Apps = () => {
     const { t } = useTranslation()
-    const router = useRouter()
+    const navigate = useNavigate()
     const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator } = useAppContext()
     const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
     const [activeTab, setActiveTab] = useTabSearchParams({
@@ -108,8 +127,8 @@ const Apps = () => {
 
     useEffect(() => {
         if (isCurrentWorkspaceDatasetOperator)
-            return router.replace('/datasets')
-    }, [router, isCurrentWorkspaceDatasetOperator])
+            return navigate('/datasets')
+    }, [navigate, isCurrentWorkspaceDatasetOperator])
 
     useEffect(() => {
         const hasMore = data?.at(-1)?.has_more ?? true
@@ -203,21 +222,3 @@ const Apps = () => {
 }
 
 export default Apps
-
-function NoAppsFound() {
-    const { t } = useTranslation()
-    function renderDefaultCard() {
-        const defaultCards = Array.from({ length: 36 }, (_, index) => (
-            <div key={index} className='inline-flex h-[160px] rounded-xl bg-background-default-lighter'></div>
-        ))
-        return defaultCards
-    }
-    return (
-        <>
-            {renderDefaultCard()}
-            <div className='absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-gradient-to-t from-background-body to-transparent'>
-                <span className='system-md-medium text-text-tertiary'>{t('app.newApp.noAppsFound')}</span>
-            </div>
-        </>
-    )
-}

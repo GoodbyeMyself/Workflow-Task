@@ -2,7 +2,7 @@
 import type { FC } from 'react'
 import { useUnmount } from 'ahooks'
 import React, { useCallback, useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { useLocation, useNavigate } from 'umi'
 import {
   RiDashboard2Fill,
   RiDashboard2Line,
@@ -38,8 +38,9 @@ const AppDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     appId, // get appId in path
   } = props
   const { t } = useTranslation()
-  const router = useRouter()
-  const pathname = usePathname()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const pathname = location.pathname
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const { isCurrentWorkspaceEditor, isLoadingCurrentWorkspace } = useAppContext()
@@ -116,7 +117,7 @@ const AppDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
       setAppDetailRes(res)
     }).catch((e: any) => {
       if (e.status === 404)
-        router.replace('/apps')
+        navigate('/apps', { replace: true })
     }).finally(() => {
       setIsLoadingAppDetail(false)
     })
@@ -130,14 +131,14 @@ const AppDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     // redirection
     const canIEditApp = isCurrentWorkspaceEditor
     if (!canIEditApp && (pathname.endsWith('configuration') || pathname.endsWith('workflow') || pathname.endsWith('logs'))) {
-      router.replace(`/app/${appId}/overview`)
+      navigate(`/app/${appId}/overview`, { replace: true })
       return
     }
     if ((res.mode === 'workflow' || res.mode === 'advanced-chat') && (pathname).endsWith('configuration')) {
-      router.replace(`/app/${appId}/workflow`)
+      navigate(`/app/${appId}/workflow`, { replace: true })
     }
     else if ((res.mode !== 'workflow' && res.mode !== 'advanced-chat') && (pathname).endsWith('workflow')) {
-      router.replace(`/app/${appId}/configuration`)
+      navigate(`/app/${appId}/configuration`, { replace: true })
     }
     else {
       setAppDetail({ ...res, enable_sso: false })

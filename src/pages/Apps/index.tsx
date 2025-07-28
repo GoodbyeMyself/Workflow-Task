@@ -1,15 +1,27 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // ui 组件
 import TabSliderNew from '@/app/components/base/tab-slider-new';
 import TagFilter from '@/app/components/base/tag-management/filter';
 import CheckboxWithLabel from '@/app/components/datasets/create/website/base/checkbox-with-label';
 import Input from '@/app/components/base/input';
+import TagManagementModal from '@/app/components/base/tag-management';
 // 业务 组件
 import NewAppCard from './components/NewAppCard';
+import AppCard from './components/AppCard';
+import NoAppsFound from './components/NoAppsFound';
 // 业务 hook
-import { useDebounceFn } from 'ahooks'
-import { useTabSearchParams } from '@/hooks/use-tab-searchparams';
-import useAppsQueryState from '@/hooks/useAppsQueryState'
+import { useDebounceFn } from 'ahooks';
+import useSWRInfinite from 'swr/infinite';
+import { useTabSearchParams } from '@/hooks/use-tab-searchparams';;
+import useAppsQueryState from '@/hooks/useAppsQueryState';
+import { CheckModal } from '@/hooks/use-pay';
+import {
+    history,
+} from '@umijs/max';
+// i18n
+import { useTranslation } from 'react-i18next';
+// context
+import { useAppContext } from '@/context/app-context';
 // Icon
 import {
     RiApps2Line,
@@ -17,25 +29,49 @@ import {
     RiFile4Line,
     RiMessage3Line,
     RiRobot3Line,
-} from '@remixicon/react'
+} from '@remixicon/react';
+
+import type { AppListResponse } from '@/models/app';
+// store
+import { useStore as useTagStore } from '@/app/components/base/tag-management/store';
+// service
+import { fetchAppList } from '@/service/apps';
+// config
+import { NEED_REFRESH_APP_LIST_KEY } from '@/config';
+
+const getKey = (
+    pageIndex: number,
+    previousPageData: AppListResponse,
+    activeTab: string,
+    isCreatedByMe: boolean,
+    tags: string[],
+    keywords: string,
+) => {
+    if (!pageIndex || previousPageData.has_more) {
+        const params: any = { url: 'apps', params: { page: pageIndex + 1, limit: 30, name: keywords, is_created_by_me: isCreatedByMe } }
+
+        if (activeTab !== 'all')
+            params.params.mode = activeTab
+        else
+            delete params.params.mode
+
+        if (tags.length)
+            params.params.tag_ids = tags
+
+        return params
+    }
+    return null
+}
 
 const HomePage: React.FC = () => {
 
-    const newAppCardRef = useRef<HTMLDivElement>(null)
-
+    const { t } = useTranslation()
+    const router = history
+    const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator } = useAppContext()
+    const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
     const [activeTab, setActiveTab] = useTabSearchParams({
         defaultTab: 'all',
     })
-
-    const options = [
-        { value: 'all', text: '全部', icon: <RiApps2Line className='mr-1 h-[14px] w-[14px]' /> },
-        { value: 'chat', text: '聊天助手', icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
-        { value: 'agent-chat', text: 'Agent', icon: <RiRobot3Line className='mr-1 h-[14px] w-[14px]' /> },
-        { value: 'completion', text: '文字生成', icon: <RiFile4Line className='mr-1 h-[14px] w-[14px]' /> },
-        { value: 'advanced-chat', text: '聊天流', icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
-        { value: 'workflow', text: '工作流', icon: <RiExchange2Line className='mr-1 h-[14px] w-[14px]' /> },
-    ];
-
     const { query: { tagIDs = [], keywords = '', isCreatedByMe: queryIsCreatedByMe = false }, setQuery } = useAppsQueryState()
 
     const [isCreatedByMe, setIsCreatedByMe] = useState(queryIsCreatedByMe)
@@ -44,15 +80,80 @@ const HomePage: React.FC = () => {
 
     const [searchKeywords, setSearchKeywords] = useState(keywords)
 
-    const handleCreatedByMeChange = useCallback(() => {
-        const newValue = !isCreatedByMe
-        setIsCreatedByMe(newValue)
-        setQuery(prev => ({ ...prev, isCreatedByMe: newValue }))
-    }, [isCreatedByMe, setQuery])
+    const newAppCardRef = useRef<HTMLDivElement>(null)
+    
+    const setKeywords = useCallback((keywords: string) => {
+        setQuery(prev => ({ ...prev, keywords }))
+    }, [setQuery])
 
     const setTagIDs = useCallback((tagIDs: string[]) => {
         setQuery(prev => ({ ...prev, tagIDs }))
     }, [setQuery])
+
+    const { data, isLoading, error, setSize, mutate } = useSWRInfinite(
+        (pageIndex: number, previousPageData: AppListResponse) => getKey(pageIndex, previousPageData, activeTab, isCreatedByMe, tagIDs, searchKeywords),
+        fetchAppList,
+        {
+            revalidateFirstPage: true,
+            shouldRetryOnError: false,
+            dedupingInterval: 500,
+            errorRetryCount: 3,
+        },
+    )
+
+    console.log(data, '<- 打印 xxx');
+
+    const anchorRef = useRef<HTMLDivElement>(null)
+
+    const options = [
+        { value: 'all', text: t('app.types.all'), icon: <RiApps2Line className='mr-1 h-[14px] w-[14px]' /> },
+        { value: 'chat', text: t('app.types.chatbot'), icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
+        { value: 'agent-chat', text: t('app.types.agent'), icon: <RiRobot3Line className='mr-1 h-[14px] w-[14px]' /> },
+        { value: 'completion', text: t('app.types.completion'), icon: <RiFile4Line className='mr-1 h-[14px] w-[14px]' /> },
+        { value: 'advanced-chat', text: t('app.types.advanced'), icon: <RiMessage3Line className='mr-1 h-[14px] w-[14px]' /> },
+        { value: 'workflow', text: t('app.types.workflow'), icon: <RiExchange2Line className='mr-1 h-[14px] w-[14px]' /> },
+    ]
+
+    useEffect(() => {
+        if (localStorage.getItem(NEED_REFRESH_APP_LIST_KEY) === '1') {
+            localStorage.removeItem(NEED_REFRESH_APP_LIST_KEY)
+            mutate()
+        }
+    }, [mutate, t])
+
+    useEffect(() => {
+        if (isCurrentWorkspaceDatasetOperator)
+            return router.push('/datasets')
+    }, [router, isCurrentWorkspaceDatasetOperator])
+
+    useEffect(() => {
+        const hasMore = data?.at(-1)?.has_more ?? true
+        let observer: IntersectionObserver | undefined
+
+        if (error) {
+            if (observer)
+                observer.disconnect()
+            return
+        }
+
+        if (anchorRef.current) {
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !isLoading && !error && hasMore)
+                    setSize((size: number) => size + 1)
+            }, { rootMargin: '100px' })
+            observer.observe(anchorRef.current)
+        }
+        return () => observer?.disconnect()
+    }, [isLoading, setSize, anchorRef, mutate, data, error])
+
+    const { run: handleSearch } = useDebounceFn(() => {
+        setSearchKeywords(keywords)
+    }, { wait: 500 })
+
+    const handleKeywordsChange = (value: string) => {
+        setKeywords(value)
+        handleSearch()
+    }
 
     const { run: handleTagsUpdate } = useDebounceFn(() => {
         setTagIDs(tagFilterValue)
@@ -63,18 +164,11 @@ const HomePage: React.FC = () => {
         handleTagsUpdate()
     }
 
-    const setKeywords = useCallback((keywords: string) => {
-        setQuery(prev => ({ ...prev, keywords }))
-    }, [setQuery])
-
-    const { run: handleSearch } = useDebounceFn(() => {
-        setSearchKeywords(keywords)
-    }, { wait: 500 })
-
-    const handleKeywordsChange = (value: string) => {
-        setKeywords(value)
-        handleSearch()
-    }
+    const handleCreatedByMeChange = useCallback(() => {
+        const newValue = !isCreatedByMe
+        setIsCreatedByMe(newValue)
+        setQuery(prev => ({ ...prev, isCreatedByMe: newValue }))
+    }, [isCreatedByMe, setQuery])
 
     return (
         <div className='relative flex h-full shrink-0 grow flex-col overflow-y-auto bg-background-body'>
@@ -102,11 +196,45 @@ const HomePage: React.FC = () => {
                     />
                 </div>
             </div>
-            <div className='relative grid grow grid-cols-1 content-start gap-4 px-12 pt-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2k:grid-cols-6'>
-                <NewAppCard ref={newAppCardRef} />
-            </div>
+            {(data && data[0].total > 0)
+                ? <div className='relative grid grow grid-cols-1 content-start gap-4 px-12 pt-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2k:grid-cols-6'>
+                    {isCurrentWorkspaceEditor
+                        && <NewAppCard ref={newAppCardRef} onSuccess={mutate} />}
+                    {data.map(({ data: apps }) => apps.map(app => (
+                        <AppCard key={app.id} app={app} onRefresh={mutate} />
+                    )))}
+                </div>
+                : <div className='relative grid grow grid-cols-1 content-start gap-4 overflow-hidden px-12 pt-2 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 2k:grid-cols-6'>
+                    {isCurrentWorkspaceEditor
+                        && <NewAppCard ref={newAppCardRef} className='z-10' onSuccess={mutate} />}
+                    <NoAppsFound />
+                </div>
+            }
+            <CheckModal />
+            <div ref={anchorRef} className='h-0'> </div>
+            {showTagManagementModal && (
+                <TagManagementModal type='app' show={showTagManagementModal} />
+            )}
         </div>
     );
 };
 
 export default HomePage;
+// function NoAppsFound() {
+//     const { t } = useTranslation()
+//     function renderDefaultCard() {
+//         const defaultCards = Array.from({ length: 36 }, (_, index) => (
+//             <div key={index} className='inline-flex h-[160px] rounded-xl bg-background-default-lighter'></div>
+//         ))
+//         return defaultCards
+//     }
+//     return (
+//         <>
+//             {renderDefaultCard()}
+//             <div className='absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-gradient-to-t from-background-body to-transparent'>
+//                 <span className='system-md-medium text-text-tertiary'>{t('app.newApp.noAppsFound')}</span>
+//             </div>
+//         </>
+//     )
+// }
+

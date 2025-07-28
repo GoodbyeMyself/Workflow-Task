@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { produce, setAutoFreeze } from 'immer'
 import { uniqBy } from 'lodash-es'
-import { useParams, usePathname } from 'next/navigation'
+import { useParams, useLocation } from 'umi'
 import { v4 as uuidV4 } from 'uuid'
 import type {
   ChatConfig,
@@ -67,7 +67,8 @@ export const useChat = (
   const conversationMessagesAbortControllerRef = useRef<AbortController | null>(null)
   const suggestedQuestionsAbortControllerRef = useRef<AbortController | null>(null)
   const params = useParams()
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
 
   const [chatTree, setChatTree] = useState<ChatItemInTree[]>(prevChatTree || [])
   const chatTreeRef = useRef<ChatItemInTree[]>(chatTree)

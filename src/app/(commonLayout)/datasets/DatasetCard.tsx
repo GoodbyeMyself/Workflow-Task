@@ -1,7 +1,7 @@
 'use client'
 
 import { useContext } from 'use-context-selector'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'umi'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RiMoreFill } from '@remixicon/react'
@@ -32,7 +32,7 @@ const DatasetCard = ({
 }: DatasetCardProps) => {
   const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
-  const { push } = useRouter()
+  const navigate = useNavigate()
   const EXTERNAL_PROVIDER = 'external' as const
 
   const { isCurrentWorkspaceDatasetOperator } = useAppContext()
@@ -115,9 +115,11 @@ const DatasetCard = ({
         data-disable-nprogress={true}
         onClick={(e) => {
           e.preventDefault()
-          isExternalProvider(dataset.provider)
-            ? push(`/datasets/${dataset.id}/hitTesting`)
-            : push(`/datasets/${dataset.id}/documents`)
+          if (isExternalProvider(dataset.provider)) {
+            navigate(`/datasets/${dataset.id}/hitTesting`)
+          } else {
+            navigate(`/datasets/${dataset.id}/documents`)
+          }
         }}
       >
         {isExternalProvider(dataset.provider) && <CornerLabel label='External' className='absolute right-0' labelClassName='rounded-tr-xl' />}

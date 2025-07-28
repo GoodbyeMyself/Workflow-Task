@@ -1,7 +1,7 @@
 'use client'
 import { useTranslation } from 'react-i18next'
 import { Fragment, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigate, Link } from 'umi'
 import {
   RiAccountCircleLine,
   RiArrowRightUpLine,
@@ -15,7 +15,6 @@ import {
   RiStarLine,
   RiTShirt2Line,
 } from '@remixicon/react'
-import Link from 'next/link'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import Indicator from '../indicator'
 import AccountAbout from '../account-about'
@@ -39,7 +38,7 @@ export default function AppSelector() {
     flex items-center w-full h-9 pl-3 pr-2 text-text-secondary system-md-regular
     rounded-lg hover:bg-state-base-hover cursor-pointer gap-1
   `
-  const router = useRouter()
+  const navigate = useNavigate()
   const [aboutVisible, setAboutVisible] = useState(false)
   const { systemFeatures } = useGlobalPublicStore()
 
@@ -49,6 +48,7 @@ export default function AppSelector() {
   const { setShowAccountSettingModal } = useModalContext()
   const docLanguage = useGetDocLanguage()
 
+  // 替换 next/router 的 push 方法为 umi 的 navigate
   const handleLogout = async () => {
     await logout({
       url: '/logout',
@@ -59,7 +59,7 @@ export default function AppSelector() {
     localStorage.removeItem('console_token')
     localStorage.removeItem('refresh_token')
 
-    router.push('/signin')
+    navigate('/signin')
   }
 
   return (
@@ -110,7 +110,7 @@ export default function AppSelector() {
                         className={cn(itemClassName, 'group',
                           'data-[active]:bg-state-base-hover',
                         )}
-                        href='/account'
+                        to='/account'
                         target='_self' rel='noopener noreferrer'>
                         <RiAccountCircleLine className='size-4 shrink-0 text-text-tertiary' />
                         <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.account.account')}</div>
@@ -133,7 +133,7 @@ export default function AppSelector() {
                           className={cn(itemClassName, 'group justify-between',
                             'data-[active]:bg-state-base-hover',
                           )}
-                          href={`https://docs.dify.ai/${docLanguage}/introduction`}
+                          to={`https://docs.dify.ai/${docLanguage}/introduction`}
                           target='_blank' rel='noopener noreferrer'>
                           <RiBookOpenLine className='size-4 shrink-0 text-text-tertiary' />
                           <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.helpCenter')}</div>
@@ -149,7 +149,7 @@ export default function AppSelector() {
                           className={cn(itemClassName, 'group justify-between',
                             'data-[active]:bg-state-base-hover',
                           )}
-                          href='https://roadmap.dify.ai'
+                          to='https://roadmap.dify.ai'
                           target='_blank' rel='noopener noreferrer'>
                           <RiMap2Line className='size-4 shrink-0 text-text-tertiary' />
                           <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.roadmap')}</div>
@@ -161,7 +161,7 @@ export default function AppSelector() {
                           className={cn(itemClassName, 'group justify-between',
                             'data-[active]:bg-state-base-hover',
                           )}
-                          href='https://github.com/langgenius/dify'
+                          to='https://github.com/langgenius/dify'
                           target='_blank' rel='noopener noreferrer'>
                           <RiGithubLine className='size-4 shrink-0 text-text-tertiary' />
                           <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.github')}</div>

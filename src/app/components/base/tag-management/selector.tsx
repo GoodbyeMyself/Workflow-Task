@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { useMemo, useState } from 'react'
 import { useContext } from 'use-context-selector'
+import { useTranslation } from 'react-i18next'
 import { useUnmount } from 'ahooks'
 import { RiAddLine } from '@remixicon/react'
 import { useStore as useTagStore } from './store'
@@ -32,6 +33,7 @@ type PanelProps = {
 } & HtmlContentProps & TagSelectorProps
 
 const Panel = (props: PanelProps) => {
+  const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
   const { targetID, type, value, selectedTags, onCacheUpdate, onChange, onCreate } = props
   const tagList = useTagStore(s => s.tagList)
@@ -62,7 +64,7 @@ const Panel = (props: PanelProps) => {
     try {
       setCreating(true)
       const newTag = await createTag(keywords, type)
-      notify({ type: 'success', message: '标签创建成功' })
+      notify({ type: 'success', message: t('common.tag.created') })
       setTagList([
         ...tagList,
         newTag,
@@ -72,26 +74,26 @@ const Panel = (props: PanelProps) => {
       onCreate()
     }
     catch {
-      notify({ type: 'error', message: '标签创建失败' })
+      notify({ type: 'error', message: t('common.tag.failed') })
       setCreating(false)
     }
   }
   const bind = async (tagIDs: string[]) => {
     try {
       await bindTag(tagIDs, targetID, type)
-      notify({ type: 'success', message: '修改成功' })
+      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch {
-      notify({ type: 'error', message: '修改失败' })
+      notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
     }
   }
   const unbind = async (tagID: string) => {
     try {
       await unBindTag(tagID, targetID, type)
-      notify({ type: 'success', message: '修改成功' })
+      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch {
-      notify({ type: 'error', message: '修改失败' })
+      notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
     }
   }
   const selectTag = (tag: Tag) => {
@@ -130,7 +132,7 @@ const Panel = (props: PanelProps) => {
           showLeftIcon
           showClearIcon
           value={keywords}
-          placeholder={'搜索或者创建'}
+          placeholder={t('common.tag.selectorPlaceholder') || ''}
           onChange={e => handleKeywordsChange(e.target.value)}
           onClear={() => handleKeywordsChange('')}
         />
@@ -140,7 +142,7 @@ const Panel = (props: PanelProps) => {
           <div className='flex cursor-pointer items-center gap-2 rounded-lg py-[6px] pl-3 pr-2 hover:bg-state-base-hover' onClick={createNewTag}>
             <RiAddLine className='h-4 w-4 text-text-tertiary' />
             <div className='grow truncate text-sm leading-5 text-text-secondary'>
-              {'创建'}
+              {`${t('common.tag.create')} `}
               <span className='font-medium'>{`"${keywords}"`}</span>
             </div>
           </div>
@@ -185,7 +187,7 @@ const Panel = (props: PanelProps) => {
         <div className='p-1'>
           <div className='flex flex-col items-center gap-1 p-3'>
             <Tag03 className='h-6 w-6 text-text-quaternary' />
-            <div className='text-xs leading-[14px] text-text-tertiary'>{'没有标签'}</div>
+            <div className='text-xs leading-[14px] text-text-tertiary'>{t('common.tag.noTag')}</div>
           </div>
         </div>
       )}
@@ -194,7 +196,7 @@ const Panel = (props: PanelProps) => {
         <div className='flex cursor-pointer items-center gap-2 rounded-lg py-[6px] pl-3 pr-2 hover:bg-state-base-hover' onClick={() => setShowTagManagementModal(true)}>
           <Tag03 className='h-4 w-4 text-text-tertiary' />
           <div className='grow truncate text-sm leading-5 text-text-secondary'>
-            {'管理标签'}
+            {t('common.tag.manageTags')}
           </div>
         </div>
       </div>
@@ -235,7 +237,7 @@ const TagSelector: FC<TagSelectorProps> = ({
       )}>
         <Tag01 className='h-3 w-3 shrink-0 text-components-input-text-placeholder' />
         <div className='system-sm-regular grow truncate  text-start text-components-input-text-placeholder'>
-          {!triggerContent ? '添加标签' : triggerContent}
+          {!triggerContent ? t('common.tag.addTag') : triggerContent}
         </div>
       </div>
     )

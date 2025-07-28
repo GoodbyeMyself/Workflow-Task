@@ -9,7 +9,7 @@ import type { Item } from '@/app/components/base/select'
 import { updateUserProfile } from '@/service/common'
 import { ToastContext } from '@/app/components/base/toast'
 import I18n from '@/context/i18n'
-import { timezones } from '@/utils/timezone'
+import timezones from '@/utils/timezone.json'
 import { languages } from '@/i18n/language'
 
 const titleClassName = `

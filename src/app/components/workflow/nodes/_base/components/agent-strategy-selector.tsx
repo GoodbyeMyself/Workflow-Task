@@ -5,7 +5,7 @@ import type { Strategy } from './agent-strategy'
 import classNames from '@/utils/classnames'
 import { RiArrowDownSLine, RiErrorWarningFill } from '@remixicon/react'
 import Tooltip from '@/app/components/base/tooltip'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { InstallPluginButton } from './install-plugin-button'
 import ViewTypeSelect, { ViewType } from '../../../block-selector/view-type-select'
 import SearchInput from '@/app/components/base/search-input'
@@ -42,7 +42,7 @@ const NotFoundWarn = (props: {
           {description}
         </p>
         <p>
-          <Link href={'/plugins'} className='tracking-tight text-text-accent'>
+          <Link to={'/plugins'} className='tracking-tight text-text-accent'>
             {t('workflow.nodes.agent.linkToPlugin')}
           </Link>
         </p>

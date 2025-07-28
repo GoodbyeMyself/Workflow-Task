@@ -6,7 +6,7 @@ import type { Placement } from '@floating-ui/react'
 import {
     RiEqualizer2Line,
 } from '@remixicon/react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'umi'
 import Divider from '../../base/divider'
 import { removeAccessToken } from '../utils'
 import InfoModal from './info-modal'
@@ -31,7 +31,7 @@ const MenuDropdown: FC<Props> = ({
     placement,
     hideLogout,
 }) => {
-    const router = useRouter()
+    const navigate = useNavigate()
     const { t } = useTranslation()
     const [open, doSetOpen] = useState(false)
     const openRef = useRef(open)
@@ -46,8 +46,8 @@ const MenuDropdown: FC<Props> = ({
 
     const handleLogout = useCallback(() => {
         removeAccessToken()
-        router.replace(`/webapp-signin?redirect_url=${window.location.href}`)
-    }, [router])
+        navigate(`/webapp-signin?redirect_url=${window.location.href}`, { replace: true })
+    }, [navigate])
 
     const [show, setShow] = useState(false)
 

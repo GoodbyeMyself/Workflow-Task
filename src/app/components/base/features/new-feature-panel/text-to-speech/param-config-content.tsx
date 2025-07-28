@@ -2,7 +2,7 @@
 import useSWR from 'swr'
 import produce from 'immer'
 import React, { Fragment } from 'react'
-import { usePathname } from 'next/navigation'
+import { useLocation } from 'umi'
 import { useTranslation } from 'react-i18next'
 import { RiCloseLine } from '@remixicon/react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from '@headlessui/react'
@@ -27,8 +27,8 @@ const VoiceParamConfig = ({
   onChange,
 }: VoiceParamConfigProps) => {
   const { t } = useTranslation()
-  const pathname = usePathname()
-  const matched = pathname.match(/\/app\/([^/]+)/)
+  const location = useLocation()
+  const matched = location.pathname.match(/\/app\/([^/]+)/)
   const appId = (matched?.length && matched[1]) ? matched[1] : ''
   const text2speech = useFeatures(state => state.features.text2speech)
   const featuresStore = useFeaturesStore()

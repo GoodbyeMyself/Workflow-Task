@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { usePathname, useSearchParams, useSelectedLayoutSegment } from 'next/navigation'
+import { Link, useLocation } from 'umi'
 import type { INavSelectorProps } from './nav-selector'
 import NavSelector from './nav-selector'
 import classNames from '@/utils/classnames'
@@ -32,16 +31,18 @@ const Nav = ({
   isApp,
 }: INavProps) => {
   const setAppDetail = useAppStore(state => state.setAppDetail)
+  const location = useLocation()
   const [hovered, setHovered] = useState(false)
-  const segment = useSelectedLayoutSegment()
-  const isActivated = Array.isArray(activeSegment) ? activeSegment.includes(segment!) : segment === activeSegment
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  // 兼容 next 的 segment 逻辑，假设 layout segment 为路径的第一级
+  const segment = location.pathname.split('/')[1] || ''
+  const isActivated = Array.isArray(activeSegment) ? activeSegment.includes(segment) : segment === activeSegment
+  const pathname = location.pathname
+  const searchParams = location.search.startsWith('?') ? location.search.slice(1) : location.search
   const [linkLastSearchParams, setLinkLastSearchParams] = useState('')
 
   useEffect(() => {
     if (pathname === link)
-      setLinkLastSearchParams(searchParams.toString())
+      setLinkLastSearchParams(searchParams)
   }, [pathname, searchParams])
 
   return (
@@ -50,7 +51,7 @@ const Nav = ({
       ${isActivated && 'bg-components-main-nav-nav-button-bg-active font-semibold shadow-md'}
       ${!curNav && !isActivated && 'hover:bg-components-main-nav-nav-button-bg-hover'}
     `}>
-      <Link href={link + (linkLastSearchParams && `?${linkLastSearchParams}`)}>
+      <Link to={link + (linkLastSearchParams && `?${linkLastSearchParams}`)}>
         <div
           onClick={() => setAppDetail()}
           className={classNames(`

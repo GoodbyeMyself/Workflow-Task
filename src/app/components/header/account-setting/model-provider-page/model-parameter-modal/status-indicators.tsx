@@ -1,5 +1,5 @@
 import Tooltip from '@/app/components/base/tooltip'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { SwitchPluginVersion } from '@/app/components/workflow/nodes/_base/components/switch-plugin-version'
 import { useInstalledPluginList } from '@/service/use-plugins'
 import { RiErrorWarningFill } from '@remixicon/react'
@@ -27,7 +27,7 @@ const StatusIndicators = ({ needsConfiguration, modelProvider, inModelList, disa
         {linkText && linkHref && (
           <div className='body-xs-regular z-[100] cursor-pointer text-text-accent'>
             <Link
-              href={linkHref}
+              to={linkHref}
               onClick={(e) => {
                 e.stopPropagation()
               }}

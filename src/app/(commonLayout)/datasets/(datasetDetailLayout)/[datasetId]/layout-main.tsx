@@ -1,7 +1,7 @@
 'use client'
 import type { FC } from 'react'
 import React, { useEffect, useMemo } from 'react'
-import { usePathname } from 'next/navigation'
+import { useLocation } from 'umi'
 import useSWR from 'swr'
 import { useTranslation } from 'react-i18next'
 import { useBoolean } from 'ahooks'
@@ -124,7 +124,8 @@ const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     children,
     params: { datasetId },
   } = props
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
   const hideSideBar = /documents\/create$/.test(pathname)
   const { t } = useTranslation()
   const { isCurrentWorkspaceDatasetOperator } = useAppContext()

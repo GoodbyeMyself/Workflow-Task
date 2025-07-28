@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { RiArrowRightSLine, RiArrowRightUpLine, RiDiscordLine, RiFeedbackLine, RiMailSendLine, RiQuestionLine } from '@remixicon/react'
 import { Fragment } from 'react'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { useTranslation } from 'react-i18next'
 import { mailToSupport } from '../utils/util'
 import cn from '@/utils/classnames'
@@ -65,7 +65,7 @@ export default function Support() {
                     className={cn(itemClassName, 'group justify-between',
                       'data-[active]:bg-state-base-hover',
                     )}
-                    href='https://github.com/langgenius/dify/discussions/categories/feedbacks'
+                    to='https://github.com/langgenius/dify/discussions/categories/feedbacks'
                     target='_blank' rel='noopener noreferrer'>
                     <RiFeedbackLine className='size-4 shrink-0 text-text-tertiary' />
                     <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.communityFeedback')}</div>
@@ -77,7 +77,7 @@ export default function Support() {
                     className={cn(itemClassName, 'group justify-between',
                       'data-[active]:bg-state-base-hover',
                     )}
-                    href='https://discord.gg/5AEfbxcd9k'
+                    to='https://discord.gg/5AEfbxcd9k'
                     target='_blank' rel='noopener noreferrer'>
                     <RiDiscordLine className='size-4 shrink-0 text-text-tertiary' />
                     <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.community')}</div>

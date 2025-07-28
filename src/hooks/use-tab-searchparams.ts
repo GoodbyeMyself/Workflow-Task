@@ -1,16 +1,16 @@
 'use client'
-import { history, useLocation } from '@umijs/max'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useLocation, useNavigate } from 'umi'
 
 type UseTabSearchParamsOptions = {
-    defaultTab: string
-    routingBehavior?: 'push' | 'replace'
-    searchParamName?: string
-    disableSearchParams?: boolean
+  defaultTab: string
+  routingBehavior?: 'push' | 'replace'
+  searchParamName?: string
+  disableSearchParams?: boolean
 }
 
 /**
- * Custom hook to manage tab state via URL search parameters in a UmiJS application.
+ * Custom hook to manage tab state via URL search parameters in a Next.js application.
  * This hook allows for syncing the active tab with the browser's URL, enabling bookmarking and sharing of URLs with a specific tab activated.
  *
  * @param {UseTabSearchParamsOptions} options Configuration options for the hook:
@@ -20,47 +20,34 @@ type UseTabSearchParamsOptions = {
  * @returns A tuple where the first element is the active tab and the second element is a function to set the active tab.
  */
 export const useTabSearchParams = ({
-    defaultTab,
-    routingBehavior = 'push',
-    searchParamName = 'category',
-    disableSearchParams = false,
+  defaultTab,
+  routingBehavior = 'push',
+  searchParamName = 'category',
+  disableSearchParams = false,
 }: UseTabSearchParamsOptions) => {
-    const location = useLocation()
-    const [activeTab, setTab] = useState<string>(() => {
-        if (disableSearchParams) {
-            return defaultTab
-        }
-        
-        const urlParams = new URLSearchParams(location.search)
-        return urlParams.get(searchParamName) || defaultTab
-    })
+  const location = useLocation()
+  const navigate = useNavigate()
+  const pathName = location.pathname
+  const searchParams = new URLSearchParams(location.search)
+  const [activeTab, setTab] = useState<string>(
+    !disableSearchParams
+      ? (searchParams.get(searchParamName) || defaultTab)
+      : defaultTab,
+  )
 
-    // 监听 URL 变化
-    useEffect(() => {
-        if (disableSearchParams) return
-        
-        const urlParams = new URLSearchParams(location.search)
-        const tabFromUrl = urlParams.get(searchParamName)
-        if (tabFromUrl && tabFromUrl !== activeTab) {
-            setTab(tabFromUrl)
-        }
-    }, [location.search, searchParamName, disableSearchParams, activeTab])
-
-    const setActiveTab = (newActiveTab: string) => {
-        setTab(newActiveTab)
-        if (disableSearchParams) return
-        
-        const urlParams = new URLSearchParams(location.search)
-        urlParams.set(searchParamName, newActiveTab)
-        
-        const newUrl = `${location.pathname}?${urlParams.toString()}`
-        
-        if (routingBehavior === 'replace') {
-            history.replace(newUrl)
-        } else {
-            history.push(newUrl)
-        }
+  const setActiveTab = (newActiveTab: string) => {
+    setTab(newActiveTab)
+    if (disableSearchParams)
+      return
+    const newSearchParams = new URLSearchParams(location.search)
+    newSearchParams.set(searchParamName, newActiveTab)
+    const newUrl = `${pathName}?${newSearchParams.toString()}`
+    if (routingBehavior === 'replace') {
+      navigate(newUrl, { replace: true })
+    } else {
+      navigate(newUrl)
     }
+  }
 
-    return [activeTab, setActiveTab] as const
+  return [activeTab, setActiveTab] as const
 }

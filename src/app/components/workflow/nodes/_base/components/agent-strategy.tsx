@@ -3,7 +3,7 @@ import { type CredentialFormSchema, FormTypeEnum, ModelTypeEnum } from '@/app/co
 import type { ToolVarInputs } from '../../tool/types'
 import ListEmpty from '@/app/components/base/list-empty'
 import { AgentStrategySelector } from './agent-strategy-selector'
-import Link from 'next/link'
+import { Link } from 'umi'
 import { useTranslation } from 'react-i18next'
 import Form from '@/app/components/header/account-setting/model-provider-page/model-modal/Form'
 import { Agent } from '@/app/components/base/icons/src/vender/workflow'
@@ -223,7 +223,7 @@ export const AgentStrategy = memo((props: AgentStrategyProps) => {
           title={t('workflow.nodes.agent.strategy.configureTip')}
           description={<div className='text-xs text-text-tertiary'>
             {t('workflow.nodes.agent.strategy.configureTipDesc')} <br />
-            <Link href={
+            <Link to={
               locale === LanguagesSupported[1]
                 ? 'https://docs.dify.ai/zh-hans/guides/workflow/node/agent#xuan-ze-agent-ce-le'
                 : 'https://docs.dify.ai/en/guides/workflow/node/agent#select-an-agent-strategy'

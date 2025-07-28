@@ -1,66 +1,66 @@
-import { history, useLocation } from '@umijs/max'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'umi'
 
-export type AppsQuery = {
-    tagIDs?: string[]
-    keywords?: string
-    isCreatedByMe?: boolean
+type AppsQuery = {
+  tagIDs?: string[]
+  keywords?: string
+  isCreatedByMe?: boolean
 }
 
 // Parse the query parameters from the URL search string.
-function parseParams(search: string): AppsQuery {
-    const params = new URLSearchParams(search)
-    const tagIDs = params.get('tagIDs')?.split(';')
-    const keywords = params.get('keywords') || undefined
-    const isCreatedByMe = params.get('isCreatedByMe') === 'true'
-    return { tagIDs, keywords, isCreatedByMe }
+function parseParams(params: URLSearchParams): AppsQuery {
+  const tagIDs = params.get('tagIDs')?.split(';')
+  const keywords = params.get('keywords') || undefined
+  const isCreatedByMe = params.get('isCreatedByMe') === 'true'
+  return { tagIDs, keywords, isCreatedByMe }
 }
 
 // Update the URL search string with the given query parameters.
 function updateSearchParams(query: AppsQuery, current: URLSearchParams) {
-    const { tagIDs, keywords, isCreatedByMe } = query || {}
+  const { tagIDs, keywords, isCreatedByMe } = query || {}
 
-    if (tagIDs && tagIDs.length > 0)
-        current.set('tagIDs', tagIDs.join(';'))
-    else
-        current.delete('tagIDs')
+  if (tagIDs && tagIDs.length > 0)
+    current.set('tagIDs', tagIDs.join(';'))
+  else
+    current.delete('tagIDs')
 
-    if (keywords)
-        current.set('keywords', keywords)
-    else
-        current.delete('keywords')
+  if (keywords)
+    current.set('keywords', keywords)
+  else
+    current.delete('keywords')
 
-    if (isCreatedByMe)
-        current.set('isCreatedByMe', 'true')
-    else
-        current.delete('isCreatedByMe')
+  if (isCreatedByMe)
+    current.set('isCreatedByMe', 'true')
+  else
+    current.delete('isCreatedByMe')
 }
 
 function useAppsQueryState() {
-    const location = useLocation()
-    const [query, setQuery] = useState<AppsQuery>(() => parseParams(location.search))
+  const location = useLocation()
+  const navigate = useNavigate()
 
-    const syncSearchParams = useCallback((params: URLSearchParams) => {
-        const search = params.toString()
-        const query = search ? `?${search}` : ''
-        const newUrl = `${location.pathname}${query}`
-        history.push(newUrl)
-    }, [location.pathname])
+  // 解析 searchParams
+  const searchParams = useMemo(() => {
+    return new URLSearchParams(location.search)
+  }, [location.search])
 
-    // Update the URL search string whenever the query changes.
-    useEffect(() => {
-        const params = new URLSearchParams(location.search)
-        updateSearchParams(query, params)
-        syncSearchParams(params)
-    }, [query, location.search, syncSearchParams])
+  const [query, setQuery] = useState<AppsQuery>(() => parseParams(searchParams))
 
-    // 监听 URL 变化，同步到本地状态
-    useEffect(() => {
-        const newQuery = parseParams(location.search)
-        setQuery(newQuery)
-    }, [location.search])
+  const pathname = location.pathname
+  const syncSearchParams = useCallback((params: URLSearchParams) => {
+    const search = params.toString()
+    const queryStr = search ? `?${search}` : ''
+    navigate(`${pathname}${queryStr}`, { replace: true })
+  }, [navigate, pathname])
 
-    return useMemo(() => ({ query, setQuery }), [query])
+  // Update the URL search string whenever the query changes.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    updateSearchParams(query, params)
+    syncSearchParams(params)
+  }, [query, location.search, syncSearchParams])
+
+  return useMemo(() => ({ query, setQuery }), [query])
 }
 
 export default useAppsQueryState

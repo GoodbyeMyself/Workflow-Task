@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
-import Link from 'next/link'
+import { Link } from 'umi'
 import {
   RiArrowDownSLine,
   RiArrowRightUpLine,
@@ -55,7 +55,7 @@ const InstallFromMarketplace = ({
         </div>
         <div className='mb-2 flex items-center pt-2'>
           <span className='system-sm-regular pr-1 text-text-tertiary'>{t('common.modelProvider.discoverMore')}</span>
-          <Link target="_blank" href={`${MARKETPLACE_URL_PREFIX}${theme ? `?theme=${theme}` : ''}`} className='system-sm-medium inline-flex items-center text-text-accent'>
+          <Link target="_blank" to={`${MARKETPLACE_URL_PREFIX}${theme ? `?theme=${theme}` : ''}`} className='system-sm-medium inline-flex items-center text-text-accent'>
             {t('plugin.marketplace.difyMarketplace')}
             <RiArrowRightUpLine className='h-4 w-4' />
           </Link>

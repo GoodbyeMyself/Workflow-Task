@@ -9,38 +9,38 @@ import { getSystemFeatures } from '@/service/common'
 import Loading from '@/app/components/base/loading'
 
 type GlobalPublicStore = {
-    isPending: boolean
-    setIsPending: (isPending: boolean) => void
-    systemFeatures: SystemFeatures
-    setSystemFeatures: (systemFeatures: SystemFeatures) => void
+  isPending: boolean
+  setIsPending: (isPending: boolean) => void
+  systemFeatures: SystemFeatures
+  setSystemFeatures: (systemFeatures: SystemFeatures) => void
 }
 
 export const useGlobalPublicStore = create<GlobalPublicStore>(set => ({
-    isPending: true,
-    setIsPending: (isPending: boolean) => set(() => ({ isPending })),
-    systemFeatures: defaultSystemFeatures,
-    setSystemFeatures: (systemFeatures: SystemFeatures) => set(() => ({ systemFeatures })),
+  isPending: true,
+  setIsPending: (isPending: boolean) => set(() => ({ isPending })),
+  systemFeatures: defaultSystemFeatures,
+  setSystemFeatures: (systemFeatures: SystemFeatures) => set(() => ({ systemFeatures })),
 }))
 
 const GlobalPublicStoreProvider: FC<PropsWithChildren> = ({
-    children,
+  children,
 }) => {
-    const { isPending, data } = useQuery({
-        queryKey: ['systemFeatures'],
-        queryFn: getSystemFeatures,
-    })
-    const { setSystemFeatures, setIsPending } = useGlobalPublicStore()
-    useEffect(() => {
-        if (data)
-            setSystemFeatures({ ...defaultSystemFeatures, ...data })
-    }, [data, setSystemFeatures])
+  const { isPending, data } = useQuery({
+    queryKey: ['systemFeatures'],
+    queryFn: getSystemFeatures,
+  })
+  const { setSystemFeatures, setIsPending } = useGlobalPublicStore()
+  useEffect(() => {
+    if (data)
+      setSystemFeatures({ ...defaultSystemFeatures, ...data })
+  }, [data, setSystemFeatures])
 
-    useEffect(() => {
-        setIsPending(isPending)
-    }, [isPending, setIsPending])
+  useEffect(() => {
+    setIsPending(isPending)
+  }, [isPending, setIsPending])
 
-    if (isPending)
-        return <div className='flex h-screen w-screen items-center justify-center'><Loading /></div>
-    return <>{children}</>
+  if (isPending)
+    return <div className='flex h-screen w-screen items-center justify-center'><Loading /></div>
+  return <>{children}</>
 }
 export default GlobalPublicStoreProvider

@@ -5,7 +5,7 @@ import {
   RiArrowDownDoubleLine,
 } from '@remixicon/react'
 import { useTranslation } from 'react-i18next'
-import { usePathname } from 'next/navigation'
+import { useLocation } from 'umi'
 import { useBoolean } from 'ahooks'
 import type { LangFuseConfig, LangSmithConfig, OpikConfig, WeaveConfig } from './type'
 import { TracingProvider } from './type'
@@ -38,7 +38,7 @@ const Title = ({
 }
 const Panel: FC = () => {
   const { t } = useTranslation()
-  const pathname = usePathname()
+  const pathname = useLocation().pathname
   const matched = pathname.match(/\/app\/([^/]+)/)
   const appId = (matched?.length && matched[1]) ? matched[1] : ''
   const { isCurrentWorkspaceEditor } = useAppContext()

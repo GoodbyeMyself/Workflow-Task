@@ -7,7 +7,7 @@ import {
   RiErrorWarningFill,
 } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useLocation, useNavigate } from 'umi'
 import TabHeader from '../../base/tab-header'
 import { checkOrSetAccessToken } from '../utils'
 import MenuDropdown from './menu-dropdown'
@@ -79,20 +79,20 @@ const TextGeneration: FC<IMainProps> = ({
   const media = useBreakpoints()
   const isPC = media === MediaType.pc
 
-  const searchParams = useSearchParams()
-  const mode = searchParams.get('mode') || 'create'
-  const [currentTab, setCurrentTab] = useState<string>(['create', 'batch'].includes(mode) ? mode : 'create')
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = React.useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const mode = searchParams.get('mode') || 'create';
+  const [currentTab, setCurrentTab] = useState<string>(['create', 'batch'].includes(mode) ? mode : 'create');
 
-  const router = useRouter()
-  const pathname = usePathname()
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(location.search);
     if (params.has('mode')) {
-      params.delete('mode')
-      router.replace(`${pathname}?${params.toString()}`)
+      params.delete('mode');
+      navigate({ pathname: location.pathname, search: params.toString() ? `?${params.toString()}` : '' }, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   // Notice this situation isCallBatchAPI but not in batch tab
   const [isCallBatchAPI, setIsCallBatchAPI] = useState(false)

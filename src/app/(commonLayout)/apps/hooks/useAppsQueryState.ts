@@ -1,4 +1,4 @@
-import { type ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useLocation, useNavigate, useSearchParams } from '@umijs/max'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 type AppsQuery = {
@@ -8,7 +8,7 @@ type AppsQuery = {
 }
 
 // Parse the query parameters from the URL search string.
-function parseParams(params: ReadonlyURLSearchParams): AppsQuery {
+function parseParams(params: URLSearchParams): AppsQuery {
   const tagIDs = params.get('tagIDs')?.split(';')
   const keywords = params.get('keywords') || undefined
   const isCreatedByMe = params.get('isCreatedByMe') === 'true'
@@ -36,25 +36,24 @@ function updateSearchParams(query: AppsQuery, current: URLSearchParams) {
 }
 
 function useAppsQueryState() {
-  const searchParams = useSearchParams()
-  const [query, setQuery] = useState<AppsQuery>(() => parseParams(searchParams))
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState<AppsQuery>(() => parseParams(searchParams));
 
-  const router = useRouter()
-  const pathname = usePathname()
+  const navigate = useNavigate();
+  const location = useLocation();
   const syncSearchParams = useCallback((params: URLSearchParams) => {
-    const search = params.toString()
-    const query = search ? `?${search}` : ''
-    router.push(`${pathname}${query}`, { scroll: false })
-  }, [router, pathname])
+    const search = params.toString();
+    const queryStr = search ? `?${search}` : '';
+    navigate(`${location.pathname}${queryStr}`, { replace: true });
+  }, [navigate, location.pathname]);
 
-  // Update the URL search string whenever the query changes.
   useEffect(() => {
-    const params = new URLSearchParams(searchParams)
-    updateSearchParams(query, params)
-    syncSearchParams(params)
-  }, [query, searchParams, syncSearchParams])
+    const params = new URLSearchParams(searchParams as any);
+    updateSearchParams(query, params);
+    syncSearchParams(params);
+  }, [query, searchParams, syncSearchParams]);
 
-  return useMemo(() => ({ query, setQuery }), [query])
+  return useMemo(() => ({ query, setQuery }), [query]);
 }
 
 export default useAppsQueryState

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { usePathname, useRouter } from 'next/navigation'
+import { useLocation, useNavigate } from 'umi'
 import produce from 'immer'
 import { RiEqualizer2Line, RiExternalLinkLine } from '@remixicon/react'
 import { MessageFast } from '@/app/components/base/icons/src/vender/features'
@@ -24,8 +24,9 @@ const AnnotationReply = ({
   onChange,
 }: Props) => {
   const { t } = useTranslation()
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useNavigate()
+  const location = useLocation()
+  const pathname = location.pathname
   const matched = pathname.match(/\/app\/([^/]+)/)
   const appId = (matched?.length && matched[1]) ? matched[1] : ''
   const featuresStore = useFeaturesStore()
@@ -115,7 +116,7 @@ const AnnotationReply = ({
                     {t('common.operation.params')}
                   </Button>
                   <Button className='w-[178px]' onClick={() => {
-                    router.push(`/app/${appId}/annotations`)
+                    router(`/app/${appId}/annotations`)
                   }}>
                     <RiExternalLinkLine className='mr-1 h-4 w-4' />
                     {t('appDebug.feature.annotation.cacheManagement')}
