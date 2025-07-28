@@ -61,6 +61,13 @@ export default defineConfig({
             defaultLoader: "@/components/DefaultLoader",
             // 自定义 错误捕获
             defaultErrorBoundary: "@/components/DefaultErrorBoundary",
+            // 模块联邦共享 swr
+            shared: {
+                swr: {
+                    singleton: true,
+                    requiredVersion: '^2.0.0',
+                },
+            },
         },
         // 开启 作为子应用
         slave: {},

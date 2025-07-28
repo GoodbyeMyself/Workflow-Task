@@ -5,13 +5,13 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { apps } from '../config/qiankun';
 
 // 导入错误过滤器
-import { enableErrorFilter } from './utils/enhancedErrorFilter';
+// import { enableErrorFilter } from './utils/enhancedErrorFilter';
 
 // 国际化
 import { setLocaleOnClient } from '@/i18n';
 
 // 启用错误过滤器
-enableErrorFilter();
+// enableErrorFilter();
 
 // 设置 主题
 document.documentElement.setAttribute('data-theme', 'light');
