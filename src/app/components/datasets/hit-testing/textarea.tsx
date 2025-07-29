@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import {
   RiEqualizer2Line,
 } from '@remixicon/react'
-import Image from 'next/image'
+// import Image from 'next/image'
 import Button from '../../base/button'
 import { getIcon } from '../common/retrieval-method-info'
 import ModifyExternalRetrievalModal from './modify-external-retrieval-modal'
@@ -104,7 +104,7 @@ const TextAreaWithButton = ({
   }
 
   const retrievalMethod = isEconomy ? RETRIEVE_METHOD.invertedIndex : retrievalConfig.search_method
-  const icon = <Image className='size-3.5 text-util-colors-purple-purple-600' src={getIcon(retrievalMethod)} alt='' />
+  const icon = <img className='size-3.5 text-util-colors-purple-purple-600' src={getIcon(retrievalMethod)} alt='' />
   return (
     <>
       <div className={cn('relative rounded-xl bg-gradient-to-r from-components-input-border-active-prompt-1 to-components-input-border-active-prompt-2 p-0.5 shadow-xs')}>

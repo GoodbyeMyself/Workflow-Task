@@ -1,6 +1,6 @@
 'use client'
 import { useTranslation } from 'react-i18next'
-import Image from 'next/image'
+// import Image from 'next/image'
 import { useRef } from 'react'
 import { useHover } from 'ahooks'
 import { IndexingType } from '../../create/step-two'
@@ -78,7 +78,7 @@ const IndexMethodRadio = ({
                       onChange(option.key as DataSet['indexing_technique'])
                   } }
                   icon={
-                    <Image
+                    <img
                       src={option.key === 'high_quality' ? indexMethodIcon.high_quality : indexMethodIcon.economical}
                       alt={option.desc}
                     />

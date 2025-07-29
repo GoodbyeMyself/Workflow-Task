@@ -9,7 +9,7 @@ import {
   RiSearchEyeLine,
 } from '@remixicon/react'
 import { Link } from 'umi'
-import Image from 'next/image'
+// import Image from 'next/image'
 import { useHover } from 'ahooks'
 import SettingCog from '../assets/setting-gear-mod.svg'
 import OrangeEffect from '../assets/option-card-effect-orange.svg'
@@ -594,7 +594,7 @@ const StepTwo = ({
           && <OptionCard
             className='mb-2 bg-background-section'
             title={t('datasetCreation.stepTwo.general')}
-            icon={<Image width={20} height={20} src={SettingCog} alt={t('datasetCreation.stepTwo.general')} />}
+            icon={<img width={20} height={20} src={SettingCog} alt={t('datasetCreation.stepTwo.general')} />}
             activeHeaderClassName='bg-dataset-option-card-blue-gradient'
             description={t('datasetCreation.stepTwo.generalTip')}
             isActive={

@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Image from 'next/image'
+// import Image from 'next/image'
 import ProgressIndicator from '../../create/assets/progress-indicator.svg'
 import Reranking from '../../create/assets/rerank.svg'
 import cn from '@/utils/classnames'
@@ -198,7 +198,7 @@ const RetrievalParamConfig: FC<Props> = ({
                     key={option.value}
                     isChosen={value.reranking_mode === option.value}
                     onChosen={() => handleChangeRerankMode(option.value)}
-                    icon={<Image src={
+                    icon={<img src={
                       option.value === RerankingModeEnum.WeightedScore
                         ? ProgressIndicator
                         : Reranking

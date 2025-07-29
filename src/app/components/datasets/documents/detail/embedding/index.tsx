@@ -5,7 +5,7 @@ import { useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
 import { omit } from 'lodash-es'
 import { RiLoader2Line, RiPauseCircleLine, RiPlayCircleLine } from '@remixicon/react'
-import Image from 'next/image'
+// import Image from 'next/image'
 import { FieldInfo } from '../metadata'
 import { useDocumentContext } from '../index'
 import { IndexingType } from '../../../create/step-two'
@@ -119,7 +119,7 @@ const RuleDetail: FC<IRuleDetailProps> = React.memo(({
       label={t('datasetCreation.stepTwo.indexMode')}
       displayedValue={t(`datasetCreation.stepTwo.${indexingType === IndexingType.ECONOMICAL ? 'economical' : 'qualified'}`) as string}
       valueIcon={
-        <Image
+        <img
           className='size-4'
           src={
             indexingType === IndexingType.ECONOMICAL
@@ -134,7 +134,7 @@ const RuleDetail: FC<IRuleDetailProps> = React.memo(({
       label={t('datasetSettings.form.retrievalSetting.title')}
       displayedValue={t(`dataset.retrieval.${indexingType === IndexingType.ECONOMICAL ? 'invertedIndex' : retrievalMethod}.title`) as string}
       valueIcon={
-        <Image
+        <img
           className='size-4'
           src={
             retrievalMethod === RETRIEVE_METHOD.fullText

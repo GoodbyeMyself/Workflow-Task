@@ -1,5 +1,5 @@
 import type { ComponentProps, FC, ReactNode } from 'react'
-import Image from 'next/image'
+// import Image from 'next/image'
 import classNames from '@/utils/classnames'
 
 const TriangleArrow: FC<ComponentProps<'svg'>> = props => (
@@ -26,7 +26,7 @@ export const OptionCardHeader: FC<OptionCardHeaderProps> = (props) => {
     !disabled && 'cursor-pointer',
   )}>
     <div className='relative flex size-14 items-center justify-center overflow-hidden'>
-      {isActive && effectImg && <Image src={effectImg} className='absolute left-0 top-0 h-full w-full' alt='' width={56} height={56} />}
+      {isActive && effectImg && <img src={effectImg} className='absolute left-0 top-0 h-full w-full' alt='' width={56} height={56} />}
       <div className='p-1'>
         <div className='flex size-8 justify-center rounded-lg border border-components-panel-border-subtle bg-background-default-dodge p-1.5 shadow-md'>
           {icon}

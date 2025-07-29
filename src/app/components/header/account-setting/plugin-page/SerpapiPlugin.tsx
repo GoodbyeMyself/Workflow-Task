@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import Image from 'next/image'
+// import Image from 'next/image'
 import SerpapiLogo from '../../assets/serpapi.png'
 import KeyValidator from '../key-validator'
 import type { Form, ValidateValue } from '../key-validator/declarations'
@@ -64,7 +64,7 @@ const SerpapiPlugin = ({
   return (
     <KeyValidator
       type='serpapi'
-      title={<Image alt='serpapi logo' src={SerpapiLogo} width={64} />}
+      title={<img alt='serpapi logo' src={SerpapiLogo} width={64} />}
       status={plugin.credentials?.api_key ? 'success' : 'add'}
       forms={forms}
       keyFrom={{
